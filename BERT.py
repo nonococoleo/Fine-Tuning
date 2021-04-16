@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from transformers import DistilBertModel
 
 
@@ -22,6 +23,8 @@ class BERTForClassification(nn.Module):
 
         # Use hidden states of [CLS] for classification
         out = outputs.last_hidden_state[:, 0, :]
+
+        out = F.dropout(out, p=0.1)
 
         # Feeding cls_rep to the classifier layer
         out = self.fc(out)
