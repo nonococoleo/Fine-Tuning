@@ -7,12 +7,13 @@ import pickle
 
 
 def get_dataset(dataset_name, split):
-    if dataset_name.lower() in ["imdb", "yelp", "yahoo"]:
+    if dataset_name.lower() in ["imdb", "yelp", "yahoo","agnews","amazon","dbmedia"]\
+            and split in ["train", "test"]:
         with open(f"datasets/{dataset_name.lower()}_{split}.pkl", "rb") as f:
             data = pickle.load(f)
             return data
     else:
-        raise NotImplementedError
+        raise NotImplementedError("No Such dataset")
 
 
 class ClassificationDataset(Dataset):
