@@ -3,6 +3,8 @@ from torch import optim
 from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 
+from transformers import get_cosine_schedule_with_warmup
+
 from ClassificationDataset import ClassificationDataset
 from BERT import get_model
 
@@ -11,7 +13,7 @@ import os
 os.environ["TOKENIZERS_PARALLELISM"] = "true"
 
 
-def train(data_loader, model, criterion, optimizer, device, print_every=200):
+def train(data_loader, model, criterion, optimizer, scheduler, device, print_every=100):
     model.train()
     total_loss = 0.0
 
@@ -23,6 +25,7 @@ def train(data_loader, model, criterion, optimizer, device, print_every=200):
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
+        scheduler.step()
 
         total_loss += loss.item()
         if (step + 1) % print_every == 0:
@@ -74,6 +77,7 @@ if __name__ == '__main__':
     sent_length = 100
     batch_size = 128
     learning_rate = 2e-5
+    warmup_proportion = 0.1
 
     train_dataset = ClassificationDataset(dataset_name, 'train', sent_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size,
@@ -88,8 +92,12 @@ if __name__ == '__main__':
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
     criterion = CrossEntropyLoss()
 
+    num_steps_per_epoch = len(train_loader)
+    num_steps = num_steps_per_epoch * num_epoch
+    lr_scheduler = get_cosine_schedule_with_warmup(optimizer, warmup_proportion * num_steps, num_steps)
+
     for epoch in range(num_epoch):
-        loss_epoch = train(train_loader, model, criterion, optimizer, device, print_every)
+        loss_epoch = train(train_loader, model, criterion, optimizer, lr_scheduler, device)
         print(f"Epoch [{epoch}/{num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
 
         if (epoch + 1) % save_every == 0:
