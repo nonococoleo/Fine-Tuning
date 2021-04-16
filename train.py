@@ -67,15 +67,13 @@ if __name__ == '__main__':
 
     model_folder = "models/"
     model_name = "original"
-    num_epoch = 300
-    print_every = 100
-    save_every = 50
+    num_epoch = 5
 
     # Model parameter
     dataset_name = "imdb"
     num_class = 2
-    sent_length = 100
-    batch_size = 128
+    sent_length = 510
+    batch_size = 32
     learning_rate = 2e-5
     warmup_proportion = 0.1
 
@@ -100,8 +98,8 @@ if __name__ == '__main__':
         loss_epoch = train(train_loader, model, criterion, optimizer, lr_scheduler, device)
         print(f"Epoch [{epoch}/{num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
 
-        if (epoch + 1) % save_every == 0:
-            save_model(model, model_folder, f"{model_name}-{dataset_name}-{sent_length}-{batch_size}-{learning_rate}",
-                       epoch + 1)
-            accuracy = test(test_loader, model, device)
-            print(f"%d epoch model saved, accuracy: {accuracy}", flush=True)
+        # save and test model
+        save_model(model, model_folder, f"{model_name}-{dataset_name}-{batch_size}-{learning_rate}_{warmup_proportion}",
+                   epoch + 1)
+        accuracy = test(test_loader, model, device)
+        print(f"%d epoch model saved, accuracy: {accuracy}", flush=True)
