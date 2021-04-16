@@ -96,10 +96,10 @@ if __name__ == '__main__':
 
     for epoch in range(num_epoch):
         loss_epoch = train(train_loader, model, criterion, optimizer, lr_scheduler, device)
-        print(f"Epoch [{epoch}/{num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
+        print(f"Epoch [{epoch+1}/{num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
 
         # save and test model
         save_model(model, model_folder, f"{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}",
                    epoch + 1)
         accuracy = test(test_loader, model, device)
-        print(f"{epoch} epoch model saved, accuracy: {accuracy}", flush=True)
+        print(f"{epoch+1} epoch model saved, accuracy: {accuracy}", flush=True)
