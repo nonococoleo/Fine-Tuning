@@ -33,6 +33,9 @@ MANIFEST
 *.manifest
 *.spec
 
+
+.DS_Store
+
 # IDE
 .idea/
 .vscode/
@@ -135,3 +138,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# MacOS file
+.DS_Store
