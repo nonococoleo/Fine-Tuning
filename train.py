@@ -67,6 +67,7 @@ if __name__ == '__main__':
 
     model_folder = "models/"
     model_name = "original"
+    start_epoch = 1
     num_epoch = 5
 
     # Model parameter
@@ -85,8 +86,12 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=batch_size,
                              shuffle=False, drop_last=False, num_workers=4, pin_memory=True)
 
-    model = get_model(num_class, state_dict_file=None)  # load previous data
+    model = get_model(num_class, state_dict_file=None)  # load pretrain bert data
+    if start_epoch != 1:
+        file_name = f"models/{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}_checkpoint_{start_epoch - 1}.tar"
+        model.load_state_dict(torch.load(file_name, map_location=device))
     model = model.to(device)
+
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
     criterion = CrossEntropyLoss()
 
@@ -94,12 +99,12 @@ if __name__ == '__main__':
     num_steps = num_steps_per_epoch * num_epoch
     lr_scheduler = get_cosine_schedule_with_warmup(optimizer, warmup_proportion * num_steps, num_steps)
 
-    for epoch in range(num_epoch):
+    for epoch in range(start_epoch, num_epoch + 1):
         loss_epoch = train(train_loader, model, criterion, optimizer, lr_scheduler, device)
-        print(f"Epoch [{epoch+1}/{num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
+        print(f"Epoch [{epoch}/{num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
 
         # save and test model
         save_model(model, model_folder, f"{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}",
-                   epoch + 1)
+                   epoch)
         accuracy = test(test_loader, model, device)
-        print(f"{epoch+1} epoch model saved, accuracy: {accuracy}", flush=True)
+        print(f"{epoch} epoch model saved, accuracy: {accuracy}", flush=True)
