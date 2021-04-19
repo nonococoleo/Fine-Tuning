@@ -29,7 +29,7 @@ def train(data_loader, model, criterion, optimizer, scheduler, device, print_eve
 
         total_loss += loss.item()
         if (step + 1) % print_every == 0:
-            print('Step [%d / %d] loss: %.3f' % (step + 1, len(data_loader), loss.item()), flush=True)
+            print('Step [%d / %d] loss: %f' % (step + 1, len(data_loader), loss.item()), flush=True)
     return total_loss
 
 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
 
-    model_folder = "models/"
+    model_folder = "models"
     model_name = "original"
     pretrain_state_dict_file = 'pretrain-yelp-0.005_10000.tar'
     start_epoch = 1
@@ -108,10 +108,10 @@ if __name__ == '__main__':
 
     for epoch in range(start_epoch, num_epoch + 1):
         loss_epoch = train(train_loader, model, criterion, optimizer, lr_scheduler, device)
-        print(f"Epoch [{epoch}/{num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
+        print(f"Epoch [{epoch} / {num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
 
         # save and test model
         save_model(model, model_folder, f"{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}",
                    epoch)
         accuracy = test(test_loader, model, device)
-        print(f"{epoch} epoch model saved, accuracy: {accuracy}", flush=True)
+        print(f"Epoch {epoch} model saved, accuracy: {accuracy}", flush=True)

@@ -95,4 +95,4 @@ if __name__ == '__main__':
     # save and test model
     save_model(model, model_folder, f"{model_name}-{dataset_name}-{learning_rate}", num_steps)
     accuracy = test(test_loader, model, device)
-    print(f"{num_steps} steps pretrain model saved, accuracy: {accuracy}", flush=True)
+    print(f"Step {num_steps} pretrain model saved, accuracy: {accuracy}", flush=True)
