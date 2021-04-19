@@ -5,10 +5,10 @@ from transformers import DistilBertModel
 
 
 class BERTForClassification(nn.Module):
-    def __init__(self, bert_model, num_class):
+    def __init__(self, num_class, model_name='distilbert-base-uncased'):
         super(BERTForClassification, self).__init__()
 
-        self.bert_layer = bert_model
+        self.bert_layer = DistilBertModel.from_pretrained(model_name)
 
         # Freeze bert layers
         for p in self.bert_layer.parameters():
@@ -30,14 +30,3 @@ class BERTForClassification(nn.Module):
         out = self.fc(out)
 
         return out
-
-
-def get_model(num_class=2, state_dict_file=None, model_name='distilbert-base-uncased'):
-    if not state_dict_file:
-        bert = DistilBertModel.from_pretrained(model_name)
-    else:
-        bert = DistilBertModel()
-        state_dict = torch.load(state_dict_file)
-        bert.load_state_dict(state_dict)
-
-    return BERTForClassification(bert, num_class)

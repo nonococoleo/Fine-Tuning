@@ -5,8 +5,8 @@ from torch.utils.data import DataLoader
 
 from transformers import get_cosine_schedule_with_warmup
 
+from BERT import BERTForClassification
 from ClassificationDataset import ClassificationDataset
-from BERT import get_model
 
 import os
 
@@ -67,6 +67,7 @@ if __name__ == '__main__':
 
     model_folder = "models/"
     model_name = "original"
+    pretrain_state_dict_file = 'pretrain-yelp-0.005_10000.tar'
     start_epoch = 1
     num_epoch = 5
 
@@ -86,10 +87,16 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=batch_size,
                              shuffle=False, drop_last=False, num_workers=4, pin_memory=True)
 
-    model = get_model(num_class, state_dict_file=None)  # load pretrain bert data
-    if start_epoch != 1:
-        file_name = f"models/{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}_checkpoint_{start_epoch - 1}.tar"
-        model.load_state_dict(torch.load(file_name, map_location=device))
+    model = BERTForClassification(num_class)
+    if pretrain_state_dict_file:  # load pretrain bert data
+        file_path=f"{model_folder}/{pretrain_state_dict_file}"
+        state_dict = torch.load(file_path, map_location=device)
+        del state_dict['fc.weight']
+        del state_dict['fc.bias']
+        model.load_state_dict(state_dict, strict=False)
+    elif start_epoch != 1:  # load previous train data
+        file_path = f"{model_folder}/{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}_checkpoint_{start_epoch - 1}.tar"
+        model.load_state_dict(torch.load(file_path, map_location=device))
     model = model.to(device)
 
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
