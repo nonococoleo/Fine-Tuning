@@ -24,6 +24,15 @@ parser.add_argument('-d', '--dataset_name', default="yelp", type=str,
                     help='Dataset used to pretrain')
 parser.add_argument('-c', '--num_class', default=2, type=int,
                     help='Number of classes in the dataset')
+parser.add_argument('-l', '--sent_length', default=510, type=int,
+                    help='Sent length used to pretrain')
+parser.add_argument('-b', '--batch_size', default=64, type=int,
+                    help='Batch size used to pretrain')
+parser.add_argument('-r', '--learning_rate', default=2e-5, type=float,
+                    help='Learning rate used to pretrain')
+parser.add_argument('-w', '--warmup_proportion', default=0.1, type=float,
+                    help='Warmup Proportion used to pretrain')
+
 
 
 args = parser.parse_args()
@@ -68,10 +77,10 @@ if __name__ == '__main__':
     # Model parameter
     dataset_name = args.dataset_name
     num_class = args.num_class
-    sent_length = 510
-    batch_size = 64
-    learning_rate = 2e-5
-    warmup_proportion = 0.1
+    sent_length = args.sent_length
+    batch_size = args.batch_size
+    learning_rate = args.learning_rate
+    warmup_proportion = args.warmup_proportion
 
     train_dataset = ClassificationDataset(dataset_name, 'train', sent_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size,

@@ -18,12 +18,24 @@ parser.add_argument('-n', '--model_name', default="pretrain", type=str,
                     help='Prefix of model name')
 parser.add_argument('-p', '--pretrain_state_dict_file', default=None, type=str,
                     help='Pretrain model state dict')
+parser.add_argument('-s', '--start_epoch', default=1, type=int,
+                    help='Start epoch')
+parser.add_argument('-e', '--num_epoch', default=5, type=int,
+                    help='Number of epoch used to train')
 
 
 parser.add_argument('-d', '--dataset_name', default="yelp", type=str,
                     help='Dataset used to fine-tune')
 parser.add_argument('-c', '--num_class', default=2, type=int,
                     help='Number of classes in the dataset')
+parser.add_argument('-l', '--sent_length', default=510, type=int,
+                    help='Sent length used to pretrain')
+parser.add_argument('-b', '--batch_size', default=32, type=int,
+                    help='Batch size used to pretrain')
+parser.add_argument('-r', '--learning_rate', default=2e-3, type=float,
+                    help='Learning rate used to pretrain')
+parser.add_argument('-w', '--warmup_proportion', default=0.1, type=float,
+                    help='Warmup Proportion used to pretrain')
 
 
 args = parser.parse_args()
@@ -84,16 +96,16 @@ if __name__ == '__main__':
     model_folder = args.model_folder
     model_name = args.model_name
     pretrain_state_dict_file = args.pretrain_state_dict_file
-    start_epoch = 1
-    num_epoch = 5
+    start_epoch = args.start_epoch
+    num_epoch = args.num_epoch
 
     # Model parameter
     dataset_name = args.dataset_name
     num_class = args.num_class
-    sent_length = 510
-    batch_size = 32
-    learning_rate = 2e-3
-    warmup_proportion = 0.1
+    sent_length = args.sent_length
+    batch_size = args.batch_size
+    learning_rate = args.learning_rate
+    warmup_proportion = args.warmup_proportion
 
     train_dataset = ClassificationDataset(dataset_name, 'train', sent_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size,
