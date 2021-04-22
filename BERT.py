@@ -4,14 +4,15 @@ from transformers import DistilBertModel
 
 
 class BERTForClassification(nn.Module):
-    def __init__(self, num_class, model_name='distilbert-base-uncased'):
+    def __init__(self, num_class, freeze=True, model_name='distilbert-base-uncased'):
         super(BERTForClassification, self).__init__()
 
         self.bert_layer = DistilBertModel.from_pretrained(model_name)
 
         # Freeze bert layers
-        for p in self.bert_layer.parameters():
-            p.requires_grad = False
+        if freeze:
+            for p in self.bert_layer.parameters():
+                p.requires_grad = False
 
         # Classification layer
         self.fc = nn.Linear(768, num_class)

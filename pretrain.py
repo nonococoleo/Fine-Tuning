@@ -65,7 +65,7 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_dataset, batch_size=batch_size,
                              shuffle=False, drop_last=False, num_workers=2, pin_memory=True)
 
-    model = BERTForClassification(num_class)
+    model = BERTForClassification(num_class, freeze=False)
     model = model.to(device)
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
     criterion = CrossEntropyLoss()
