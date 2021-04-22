@@ -1,10 +1,10 @@
-import torch
 from torch import optim
 from torch.nn import CrossEntropyLoss
 from torch.utils.data import DataLoader
 
 from transformers import get_cosine_schedule_with_warmup
 
+from utilities import *
 from BERT import BERTForClassification
 from ClassificationDataset import ClassificationDataset
 
@@ -36,54 +36,6 @@ parser.add_argument('-w', '--warmup_proportion', default=0.1, type=float,
                     help='Warmup Proportion used to pretrain')
 
 args = parser.parse_args()
-
-
-def test(data_loader, model, device):
-    """
-    Test model accuracy
-
-    :param data_loader: dataloader of target dataset
-    :param model: model to be tested
-    :param device: model running device
-    :return: model accuracy on target dataset
-    """
-
-    model.eval()
-    correct, total = 0, 0
-
-    with torch.no_grad():
-        for seq, attn_masks, labels in data_loader:
-            seq, attn_masks, labels = seq.to(device), attn_masks.to(device), labels.to(device)
-            outputs = model(seq, attn_masks)
-            _, predicted = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (predicted == labels).sum().item()
-
-    return correct / total
-
-
-def save_model(model, model_folder, prefix, suffix):
-    """
-    Save model state dict to file
-
-    :param model: model to be saved
-    :param model_folder: folder to save model
-    :param prefix: prefix of model name
-    :param suffix: suffix of model name
-    :return: None
-    """
-
-    import os
-    if not os.path.exists(model_folder):
-        os.mkdir(model_folder)
-
-    out = os.path.join(model_folder, "{}_{}.tar".format(prefix, suffix))
-
-    if isinstance(model, torch.nn.DataParallel):
-        torch.save(model.module.state_dict(), out)
-    else:
-        torch.save(model.state_dict(), out)
-
 
 if __name__ == '__main__':
     # Determine device
