@@ -7,6 +7,13 @@ import pickle
 
 
 def get_dataset(dataset_name, split):
+    """
+    Load encoded dataset by name
+    :param dataset_name: target dataset name
+    :param split: dataset split
+    :return: list of data
+    """
+
     if dataset_name.lower() in ["imdb", "yelp", "yahoo", "agnews", "amazon", "dbpedia"] \
             and split in ["train", "test"]:
         with open(f"datasets/{dataset_name.lower()}_{split}.pkl", "rb") as f:
@@ -17,7 +24,22 @@ def get_dataset(dataset_name, split):
 
 
 class ClassificationDataset(Dataset):
-    def __init__(self, dataset_name, split, max_sentence_length, model_name='distilbert-base-uncased'):
+    """
+    Uniformed dataset for classification
+    """
+
+    def __init__(self, dataset_name, split, max_sentence_length, model_name='distilbert-base-uncased',
+                 max_sequence_length=512):
+        """
+        Initialize dataset
+
+        :param dataset_name: target dataset name
+        :param split: dataset split
+        :param max_sentence_length: max sentence length used
+        :param model_name: target model name
+        :param max_sequence_length: max sequence length allowed in model
+        """
+
         # Store the contents of the file in a pandas dataframe
         data = get_dataset(dataset_name, split)
         self.labels = data["labels"]
@@ -25,7 +47,7 @@ class ClassificationDataset(Dataset):
 
         # Initialize the BERT tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.max_sequence_length = 512
+        self.max_sequence_length = max_sequence_length
 
         self.max_sentence_length = max_sentence_length
         self.label_ids = {}

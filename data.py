@@ -30,6 +30,7 @@ for label, line in data_iter:
     else:
         labels.append(1 if label == "pos" else 0)
 
+# Encode sentences
 tok = AutoTokenizer.from_pretrained('distilbert-base-uncased')
 outputs = tok.batch_encode_plus(tokens)
 
