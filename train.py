@@ -12,6 +12,9 @@ import argparse
 
 parser = argparse.ArgumentParser(description='fine-tune pretrained BERT model')
 
+parser.add_argument('--num_worker', default=1, type=int,
+                    help='Number of workers for dataloader')
+
 parser.add_argument('-f', '--model_folder', default="models", type=str,
                     help='Folder to save models')
 parser.add_argument('-n', '--model_name', default="pretrain", type=str,
@@ -76,12 +79,22 @@ def test(data_loader, model, device):
     return correct / total
 
 
-def save_model(model, model_path, prefix, epoch):
-    import os
-    if not os.path.exists(model_path):
-        os.mkdir(model_path)
+def save_model(model, model_folder, prefix, suffix):
+    """
+    Save model state dict to file
 
-    out = os.path.join(model_path, "{}_checkpoint_{}.tar".format(prefix, epoch))
+    :param model: model to be saved
+    :param model_folder: folder to save model
+    :param prefix: prefix of model name
+    :param suffix: suffix of model name
+    :return: None
+    """
+
+    import os
+    if not os.path.exists(model_folder):
+        os.mkdir(model_folder)
+
+    out = os.path.join(model_folder, "{}_checkpoint_{}.tar".format(prefix, suffix))
 
     if isinstance(model, torch.nn.DataParallel):
         torch.save(model.module.state_dict(), out)
@@ -109,11 +122,11 @@ if __name__ == '__main__':
 
     train_dataset = ClassificationDataset(dataset_name, 'train', sent_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size,
-                              shuffle=True, drop_last=True, num_workers=4, pin_memory=True)
+                              shuffle=True, drop_last=True, num_workers=num_worker, pin_memory=True)
 
     test_dataset = ClassificationDataset(dataset_name, 'test', sent_length)
     test_loader = DataLoader(test_dataset, batch_size=batch_size,
-                             shuffle=False, drop_last=False, num_workers=4, pin_memory=True)
+                             shuffle=False, drop_last=False, num_workers=num_worker, pin_memory=True)
 
     model = BERTForClassification(num_class)
     if pretrain_state_dict_file:  # load pretrain bert data

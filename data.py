@@ -1,6 +1,6 @@
 from transformers import AutoTokenizer
 
-from torchtext.datasets import YahooAnswers, YelpReviewFull, DBpedia, IMDB, AmazonReviewFull, AG_NEWS
+from torchtext.datasets import YahooAnswers, YelpReviewPolarity, DBpedia, IMDB, AmazonReviewFull, AG_NEWS
 
 import os, pickle
 
@@ -9,7 +9,7 @@ dataset_name, split = "yahoo", "train"
 if dataset_name == "yahoo":
     data_iter = YahooAnswers(split=split)
 elif dataset_name == "yelp":
-    data_iter = YelpReviewFull(split=split)
+    data_iter = YelpReviewPolarity(split=split)
 elif dataset_name == "dbpedia":
     data_iter = DBpedia(split=split)
 elif dataset_name == "imdb":
@@ -25,7 +25,10 @@ tokens, labels = [], []
 
 for label, line in data_iter:
     tokens.append(line)
-    labels.append(label - 1)
+    if dataset_name != "imdb":
+        labels.append(label - 1)
+    else:
+        labels.append(1 if label == "pos" else 0)
 
 tok = AutoTokenizer.from_pretrained('distilbert-base-uncased')
 outputs = tok.batch_encode_plus(tokens)
