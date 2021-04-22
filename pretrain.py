@@ -8,9 +8,25 @@ from transformers import get_cosine_schedule_with_warmup
 from BERT import BERTForClassification
 from ClassificationDataset import ClassificationDataset
 
-import os
+import argparse
 
-os.environ["TOKENIZERS_PARALLELISM"] = "true"
+parser = argparse.ArgumentParser(description='Further pretrain BERT model')
+
+parser.add_argument('-f', '--model_folder', default="models", type=str,
+                    help='Folder to save models')
+parser.add_argument('-n', '--model_name', default="pretrain", type=str,
+                    help='Prefix of model name')
+parser.add_argument('-s', '--num_steps', default=10000, type=int,
+                    help='Number of further pretrain steps')
+
+
+parser.add_argument('-d', '--dataset_name', default="yelp", type=str,
+                    help='Dataset used to pretrain')
+parser.add_argument('-c', '--num_class', default=2, type=int,
+                    help='Number of classes in the dataset')
+
+
+args = parser.parse_args()
 
 
 def test(data_loader, model, device):
@@ -45,13 +61,13 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
 
-    model_folder = "models"
-    model_name = "pretrain"
-    num_steps = 10000
+    model_folder = args.model_folder
+    model_name = args.model_name
+    num_steps = args.num_steps
 
     # Model parameter
-    dataset_name = "imdb"
-    num_class = 2
+    dataset_name = args.dataset_name
+    num_class = args.num_class
     sent_length = 510
     batch_size = 64
     learning_rate = 2e-5

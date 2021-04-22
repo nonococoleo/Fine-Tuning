@@ -8,9 +8,25 @@ from transformers import get_cosine_schedule_with_warmup
 from BERT import BERTForClassification
 from ClassificationDataset import ClassificationDataset
 
-import os
+import argparse
 
-os.environ["TOKENIZERS_PARALLELISM"] = "true"
+parser = argparse.ArgumentParser(description='fine-tune pretrained BERT model')
+
+parser.add_argument('-f', '--model_folder', default="models", type=str,
+                    help='Folder to save models')
+parser.add_argument('-n', '--model_name', default="pretrain", type=str,
+                    help='Prefix of model name')
+parser.add_argument('-p', '--pretrain_state_dict_file', default=None, type=str,
+                    help='Pretrain model state dict')
+
+
+parser.add_argument('-d', '--dataset_name', default="yelp", type=str,
+                    help='Dataset used to fine-tune')
+parser.add_argument('-c', '--num_class', default=2, type=int,
+                    help='Number of classes in the dataset')
+
+
+args = parser.parse_args()
 
 
 def train(data_loader, model, criterion, optimizer, scheduler, device, print_every=100):
@@ -65,15 +81,15 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
 
-    model_folder = "models"
-    model_name = "yelp50000"
-    pretrain_state_dict_file = 'pretrain-yelp-0.005_10000.tar'
+    model_folder = args.model_folder
+    model_name = args.model_name
+    pretrain_state_dict_file = args.pretrain_state_dict_file
     start_epoch = 1
     num_epoch = 5
 
     # Model parameter
-    dataset_name = "yelp"
-    num_class = 2
+    dataset_name = args.dataset_name
+    num_class = args.num_class
     sent_length = 510
     batch_size = 32
     learning_rate = 2e-3
