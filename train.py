@@ -66,17 +66,17 @@ if __name__ == '__main__':
     print(device)
 
     model_folder = "models"
-    model_name = "original"
+    model_name = "yelp50000"
     pretrain_state_dict_file = 'pretrain-yelp-0.005_10000.tar'
     start_epoch = 1
     num_epoch = 5
 
     # Model parameter
-    dataset_name = "imdb"
+    dataset_name = "yelp"
     num_class = 2
     sent_length = 510
     batch_size = 32
-    learning_rate = 2e-5
+    learning_rate = 2e-3
     warmup_proportion = 0.1
 
     train_dataset = ClassificationDataset(dataset_name, 'train', sent_length)

@@ -53,8 +53,8 @@ if __name__ == '__main__':
     dataset_name = "imdb"
     num_class = 2
     sent_length = 510
-    batch_size = 32
-    learning_rate = 5e-3
+    batch_size = 64
+    learning_rate = 2e-5
     warmup_proportion = 0.1
 
     train_dataset = ClassificationDataset(dataset_name, 'train', sent_length)
@@ -93,6 +93,6 @@ if __name__ == '__main__':
                 break
 
     # save and test model
-    save_model(model, model_folder, f"{model_name}-{dataset_name}-{learning_rate}", num_steps)
+    save_model(model, model_folder, f"{model_name}-{dataset_name}-{batch_size}-{learning_rate}", num_steps)
     accuracy = test(test_loader, model, device)
     print(f"Step {num_steps} pretrain model saved, accuracy: {accuracy}", flush=True)
