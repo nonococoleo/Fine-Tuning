@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Segment Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+            crossorigin="anonymous"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#clear").click(function () {
+                $("#sent").val("").focus();
+                $("#result").text('');
+                $("#message").text('');
+            });
+        });
+
+        function predict() {
+            $("#result").text('');
+            $("#message").text("Processing");
+            var sent = $("#sent").val();
+            if (sent.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: "http://localhost:5000/predict",
+                    data: JSON.stringify({"sentences": [sent]}),
+                    datatype: "json",
+                    contentType: "application/json; charset=UTF-8",
+                    success: function (data) {
+                        console.log(data);
+                        $("#message").html(JSON.stringify(data, undefined, 2));
+                        let flag = data["message"]["labels"][0];
+                        let label = flag ? "Positive" : "Negative";
+                        $("#result").text(label);
+                        $('#history').append(`<tr><td>${sent}</td><td>${label}</td></tr>`);
+                    }
+                });
+            }
+
+            return false;
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <br>
+    <h3>Segment Analysis</h3>
+    <br>
+    <form onsubmit='return predict()'>
+        <div class="input-group">
+            <input type="text" id="sent" class="form-control" value="" aria-describedby="button-addon4"
+                   placeholder="Sentence">
+            <div class="input-group-append" id="button-addon4">
+                <button type="submit" class="btn btn-outline-info" id="submit">Predict</button>
+                <button type="reset" class="btn btn-outline-danger" id="clear">Clear</button>
+            </div>
+        </div>
+    </form>
+    <hr>
+    <div>
+        <h4>Result</h4>
+        <br>
+        <h6 id="result"></h6>
+    </div>
+    <hr>
+    <div>
+        <h4>Message</h4>
+        <br>
+        <pre id="message"></pre>
+    </div>
+    <hr>
+    <div>
+        <h4>History</h4>
+        <br>
+        <table class="table table-sm table-hover" id="history">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Sentence</th>
+                <th scope="col">Prediction</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
