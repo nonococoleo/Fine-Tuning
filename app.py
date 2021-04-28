@@ -1,12 +1,13 @@
-from utilities import *
 from transformers import AutoTokenizer
+
+from utilities import *
 from BERT import BERTForClassification
 
 model_file = "models/all_10000-yelp-32-0.002-0.1_checkpoint_5.tar"
 
 
 def load_model(device, model_file, num_classes=2):
-    model = BERTForClassification(num_classes, freeze=False)
+    model = BERTForClassification(num_classes)
     state_dict = torch.load(model_file, map_location=device)
     model.load_state_dict(state_dict, strict=False)
     model = model.to(device)

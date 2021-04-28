@@ -2,7 +2,8 @@ from transformers import AutoTokenizer
 
 from torchtext.datasets import YahooAnswers, YelpReviewPolarity, DBpedia, IMDB, AmazonReviewFull, AG_NEWS
 
-import os, pickle
+import os
+import pickle
 
 dataset_name, split = "yahoo", "train"
 

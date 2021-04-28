@@ -51,9 +51,9 @@ def test(data_loader, model, device):
     correct, total = 0, 0
 
     with torch.no_grad():
-        for seq, attn_masks, labels in data_loader:
-            seq, attn_masks, labels = seq.to(device), attn_masks.to(device), labels.to(device)
-            outputs = model(seq, attn_masks)
+        for seqs, attn_masks, labels in data_loader:
+            seqs, attn_masks, labels = seqs.to(device), attn_masks.to(device), labels.to(device)
+            outputs = model(seqs, attn_masks)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()

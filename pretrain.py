@@ -66,7 +66,7 @@ if __name__ == '__main__':
                              shuffle=False, drop_last=False, num_workers=num_worker, pin_memory=True)
 
     # Load DistilBERT base model (uncased)
-    model = BERTForClassification(num_class, freeze=False)
+    model = BERTForClassification(num_class, freeze_bert_paras=False)
     if num_worker > 1:
         model = torch.nn.DataParallel(model)
     model = model.to(device)
@@ -78,11 +78,11 @@ if __name__ == '__main__':
     model.train()
     count_steps = 0
     while count_steps < num_steps:
-        for step, (seq, attn_masks, labels) in enumerate(train_loader):
-            seq, attn_masks, labels = seq.to(device), attn_masks.to(device), labels.to(device)
+        for step, (seqs, attn_masks, labels) in enumerate(train_loader):
+            seqs, attn_masks, labels = seqs.to(device), attn_masks.to(device), labels.to(device)
             optimizer.zero_grad()
 
-            outputs = model(seq, attn_masks)
+            outputs = model(seqs, attn_masks)
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
