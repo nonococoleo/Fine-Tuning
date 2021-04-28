@@ -12,7 +12,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='fine-tune pretrained BERT model')
 
-parser.add_argument('--num_workers', default=1, type=int,
+parser.add_argument('--num_worker', default=1, type=int,
                     help='Number of workers for dataloader')
 
 parser.add_argument('-f', '--model_folder', default="models", type=str,
@@ -23,12 +23,12 @@ parser.add_argument('-p', '--pretrain_state_dict_file', default=None, type=str,
                     help='Pretrain model state dict')
 parser.add_argument('-s', '--start_epoch', default=1, type=int,
                     help='Start epoch')
-parser.add_argument('-e', '--num_epochs', default=5, type=int,
+parser.add_argument('-e', '--num_epoch', default=5, type=int,
                     help='Number of epoch used to train')
 
 parser.add_argument('-d', '--dataset_name', default="yelp", type=str,
                     help='Dataset used to fine-tune')
-parser.add_argument('-c', '--num_classes', default=2, type=int,
+parser.add_argument('-c', '--num_class', default=2, type=int,
                     help='Number of classes in the dataset')
 parser.add_argument('-l', '--sent_length', default=510, type=int,
                     help='Sent length used to pretrain')
@@ -47,16 +47,16 @@ if __name__ == '__main__':
     print(device)
 
     # Model settings
-    num_workers = args.num_workers
+    num_worker = args.num_worker
     model_folder = args.model_folder
     model_name = args.model_name
 
     # Training parameter
     pretrain_state_dict_file = args.pretrain_state_dict_file
     start_epoch = args.start_epoch
-    num_epochs = args.num_epochs
+    num_epoch = args.num_epoch
     dataset_name = args.dataset_name
-    num_classes = args.num_classes
+    num_class = args.num_class
     sent_length = args.sent_length
     batch_size = args.batch_size
     learning_rate = args.learning_rate
@@ -65,14 +65,14 @@ if __name__ == '__main__':
     # Load target dataset
     train_dataset = ClassificationDataset(dataset_name, 'train', sent_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size,
-                              shuffle=True, drop_last=True, num_workers=num_workers, pin_memory=True)
+                              shuffle=True, drop_last=True, num_workers=num_worker, pin_memory=True)
 
     test_dataset = ClassificationDataset(dataset_name, 'test', sent_length)
     test_loader = DataLoader(test_dataset, batch_size=batch_size,
-                             shuffle=False, drop_last=False, num_workers=num_workers, pin_memory=True)
+                             shuffle=False, drop_last=False, num_workers=num_worker, pin_memory=True)
 
     # Load model
-    model = BERTForClassification(num_classes)
+    model = BERTForClassification(num_class)
     if pretrain_state_dict_file is not None:
         # Load pretrain model data
         file_path = f"{model_folder}/{pretrain_state_dict_file}"
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         file_path = f"{model_folder}/{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}_checkpoint_{start_epoch - 1}.tar"
         model.load_state_dict(torch.load(file_path, map_location=device))
 
-    if num_workers > 1:
+    if num_worker > 1:
         model = torch.nn.DataParallel(model)
     model = model.to(device)
 
@@ -93,13 +93,13 @@ if __name__ == '__main__':
     criterion = CrossEntropyLoss()
 
     num_steps_per_epoch = len(train_loader)
-    num_steps = num_steps_per_epoch * num_epochs
+    num_steps = num_steps_per_epoch * num_epoch
     lr_scheduler = get_cosine_schedule_with_warmup(optimizer, warmup_proportion * num_steps, num_steps)
 
     # Train model
-    for epoch in range(start_epoch, num_epochs + 1):
+    for epoch in range(start_epoch, num_epoch + 1):
         loss_epoch = train(train_loader, model, criterion, optimizer, lr_scheduler, device)
-        print(f"Epoch [{epoch} / {num_epochs}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
+        print(f"Epoch [{epoch} / {num_epoch}]\t Loss: {loss_epoch / len(train_loader)}", flush=True)
 
         # Save and test model
         save_model(model, model_folder, f"{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}",

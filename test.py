@@ -22,7 +22,7 @@ if __name__ == '__main__':
     model_folder = "models"
     state_dict_file = "pretrain/pretrain-yelp-64-0.00002_10000.tar"
 
-    # Model parameter
+    # Test parameter
     dataset_name = "imdb"
     num_classes = 2
     sent_length = 510

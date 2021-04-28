@@ -12,7 +12,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Further pretrain BERT model')
 
-parser.add_argument('--num_workers', default=1, type=int,
+parser.add_argument('--num_worker', default=1, type=int,
                     help='Number of workers for dataloader')
 
 parser.add_argument('-f', '--model_folder', default="models", type=str,
@@ -24,7 +24,7 @@ parser.add_argument('-s', '--num_steps', default=10000, type=int,
 
 parser.add_argument('-d', '--dataset_name', default="yelp", type=str,
                     help='Dataset used to pretrain')
-parser.add_argument('-c', '--num_classes', default=2, type=int,
+parser.add_argument('-c', '--num_class', default=2, type=int,
                     help='Number of classes in the dataset')
 parser.add_argument('-l', '--sent_length', default=510, type=int,
                     help='Sent length used to pretrain')
@@ -43,14 +43,14 @@ if __name__ == '__main__':
     print(device)
 
     # Model settings
-    num_workers = args.num_workers
+    num_worker = args.num_worker
     model_folder = args.model_folder
     model_name = args.model_name
 
     # Training parameter
     num_steps = args.num_steps
     dataset_name = args.dataset_name
-    num_classes = args.num_classes
+    num_class = args.num_class
     sent_length = args.sent_length
     batch_size = args.batch_size
     learning_rate = args.learning_rate
@@ -59,15 +59,15 @@ if __name__ == '__main__':
     # Load target dataset
     train_dataset = ClassificationDataset(dataset_name, 'train', sent_length)
     train_loader = DataLoader(train_dataset, batch_size=batch_size,
-                              shuffle=True, drop_last=True, num_workers=num_workers, pin_memory=True)
+                              shuffle=True, drop_last=True, num_workers=num_worker, pin_memory=True)
 
     test_dataset = ClassificationDataset(dataset_name, 'test', sent_length)
     test_loader = DataLoader(test_dataset, batch_size=batch_size,
-                             shuffle=False, drop_last=False, num_workers=num_workers, pin_memory=True)
+                             shuffle=False, drop_last=False, num_workers=num_worker, pin_memory=True)
 
     # Load DistilBERT base model (uncased)
-    model = BERTForClassification(num_classes, freeze_bert_paras=False)
-    if num_workers > 1:
+    model = BERTForClassification(num_class, freeze_bert_paras=False)
+    if num_worker > 1:
         model = torch.nn.DataParallel(model)
     model = model.to(device)
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
@@ -96,7 +96,6 @@ if __name__ == '__main__':
                 break
 
     # Save and test model
-    save_model(model, model_folder, f"{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}",
-               num_steps)
+    save_model(model, model_folder, f"{model_name}-{dataset_name}-{batch_size}-{learning_rate}", num_steps)
     accuracy = test(test_loader, model, device)
     print(f"{model_name}-{dataset_name}-{num_steps} model saved, accuracy: {accuracy}")
