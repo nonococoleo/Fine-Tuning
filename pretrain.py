@@ -67,6 +67,8 @@ if __name__ == '__main__':
 
     # Load DistilBERT base model (uncased)
     model = BERTForClassification(num_class, freeze=False)
+    if num_worker > 1:
+        model = torch.nn.DataParallel(model)
     model = model.to(device)
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
     criterion = CrossEntropyLoss()

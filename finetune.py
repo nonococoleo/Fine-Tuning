@@ -84,6 +84,9 @@ if __name__ == '__main__':
         # Load fine-tune model data
         file_path = f"{model_folder}/{model_name}-{dataset_name}-{batch_size}-{learning_rate}-{warmup_proportion}_checkpoint_{start_epoch - 1}.tar"
         model.load_state_dict(torch.load(file_path, map_location=device))
+
+    if num_worker > 1:
+        model = torch.nn.DataParallel(model)
     model = model.to(device)
 
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate)
