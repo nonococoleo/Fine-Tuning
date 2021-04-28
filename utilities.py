@@ -1,4 +1,5 @@
 import os
+import pickle
 
 import torch
 
@@ -80,3 +81,46 @@ def save_model(model, model_folder, prefix, suffix):
         torch.save(model.module.state_dict(), out)
     else:
         torch.save(model.state_dict(), out)
+
+
+def process_inputs(tokens_id, max_sentence_length=510, max_sequence_length=512):
+    """
+    Truncate long sentences and pad to max_sequence_length
+    :param tokens_id: encoded sentence
+    :param max_sentence_length: max sentence length
+    :param max_sequence_length: max sequence length
+    :return: sequence and attention mask input for model
+    """
+
+    # truncate long sentences
+    if len(tokens_id) < max_sentence_length + 1:
+        tokens_id = tokens_id[:max_sentence_length + 1] + [102]
+
+    if len(tokens_id) < max_sequence_length:
+        # Padding sentences
+        tokens_id = tokens_id + [0 for _ in range(max_sequence_length - len(tokens_id))]
+    else:
+        # Pruning the list to be of specified max length
+        tokens_id = tokens_id[:max_sequence_length - 1] + [102]
+
+    # Obtaining the attention mask i.e a tensor containing 1s for no padded tokens and 0s for padded ones
+    attention_mask = [1 if x != 0 else 0 for x in tokens_id]
+
+    return tokens_id, attention_mask
+
+
+def get_dataset(dataset_name, split):
+    """
+    Load encoded dataset by name
+    :param dataset_name: target dataset name
+    :param split: dataset split
+    :return: list of data
+    """
+
+    if dataset_name.lower() in ["imdb", "yelp", "yahoo", "agnews", "amazon", "dbpedia"] \
+            and split in ["train", "test"]:
+        with open(f"datasets/{dataset_name.lower()}_{split}.pkl", "rb") as f:
+            data = pickle.load(f)
+            return data
+    else:
+        raise NotImplementedError("No Such dataset")

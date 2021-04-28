@@ -1,26 +1,8 @@
-import torch
 from torch.utils.data import Dataset
 
 from transformers import AutoTokenizer
 
-import pickle
-
-
-def get_dataset(dataset_name, split):
-    """
-    Load encoded dataset by name
-    :param dataset_name: target dataset name
-    :param split: dataset split
-    :return: list of data
-    """
-
-    if dataset_name.lower() in ["imdb", "yelp", "yahoo", "agnews", "amazon", "dbpedia"] \
-            and split in ["train", "test"]:
-        with open(f"datasets/{dataset_name.lower()}_{split}.pkl", "rb") as f:
-            data = pickle.load(f)
-            return data
-    else:
-        raise NotImplementedError("No Such dataset")
+from utilities import *
 
 
 class ClassificationDataset(Dataset):
@@ -59,21 +41,6 @@ class ClassificationDataset(Dataset):
         label = self.labels[index]
         tokens_id = self.tokens_ids[index]
 
-        # truncate long sentences
-        if len(tokens_id) < self.max_sentence_length + 1:
-            tokens_id = tokens_id[:self.max_sentence_length + 1] + [102]
-
-        if len(tokens_id) < self.max_sequence_length:
-            # Padding sentences
-            tokens_id = tokens_id + [0 for _ in range(self.max_sequence_length - len(tokens_id))]
-        else:
-            # Pruning the list to be of specified max length
-            tokens_id = tokens_id[:self.max_sequence_length - 1] + [102]
-
-        # Converting the list to a pytorch tensor
-        tokens_id_tensor = torch.tensor(tokens_id)
-
-        # Obtaining the attention mask i.e a tensor containing 1s for no padded tokens and 0s for padded ones
-        attention_mask = (tokens_id_tensor != 0).long()
+        tokens_id_tensor, attention_mask = process_inputs(tokens_id, self.max_sentence_length, self.max_sequence_length)
 
         return tokens_id_tensor, attention_mask, label

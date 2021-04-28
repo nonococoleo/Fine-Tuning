@@ -17,20 +17,8 @@ def encode_sentences(sentences, tokenizer, max_sequence_length=512, max_sentence
     sentences = tokenizer.batch_encode_plus(sentences)["input_ids"]
 
     tokens_ids, attention_masks = [], []
-    for tokens_id in sentences:
-        # truncate long sentences
-        if len(tokens_id) < max_sentence_length + 1:
-            tokens_id = tokens_id[:max_sentence_length + 1] + [102]
-
-        if len(tokens_id) < max_sequence_length:
-            # Padding sentences
-            tokens_id = tokens_id + [0 for _ in range(max_sequence_length - len(tokens_id))]
-        else:
-            # Pruning the list to be of specified max length
-            tokens_id = tokens_id[:max_sequence_length - 1] + [102]
-
-        # Obtaining the attention mask i.e a tensor containing 1s for no padded tokens and 0s for padded ones
-        attention_mask = [1 if x != 0 else 0 for x in tokens_id]
+    for sentence in sentences:
+        tokens_id, attention_mask = process_inputs(sentence, max_sentence_length, max_sequence_length)
 
         tokens_ids.append(tokens_id)
         attention_masks.append(attention_mask)
