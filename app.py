@@ -27,10 +27,10 @@ def encode_sentences(sentences, tokenizer, max_sequence_length=512, max_sentence
     return torch.Tensor(tokens_ids).long(), torch.Tensor(attention_masks).int()
 
 
-def predict(device, model, seq, attn_masks):
+def predict(device, model, sequence, attention_masks):
     with torch.no_grad():
-        seq, attn_masks = seq.to(device), attn_masks.to(device)
-        outputs = model(seq, attn_masks)
+        seq, attn_mask = sequence.to(device), attention_masks.to(device)
+        outputs = model(seq, attn_mask)
         _, predicted = torch.max(outputs.data, 1)
     return predicted.bool().tolist()
 
