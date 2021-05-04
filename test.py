@@ -10,6 +10,19 @@ parser = argparse.ArgumentParser(description='Test BERT model')
 
 parser.add_argument('--num_workers', default=1, type=int,
                     help='Number of workers for dataloader')
+parser.add_argument('-f', '--model_folder', default="models", type=str,
+                    help='Folder to save models')
+parser.add_argument('-t', '--state_dict_file', default="pretrain/pretrain-yelp-64-0.00002_10000.tar", type=str,
+                    help='Pretrained model state used to test')
+
+parser.add_argument('-d', '--dataset_name', default="imdb", type=str,
+                    help='Dataset used to test')
+parser.add_argument('-c', '--num_class', default=2, type=int,
+                    help='Number of classes in the dataset')
+parser.add_argument('-l', '--sent_length', default=510, type=int,
+                    help='Sent length used to test')
+parser.add_argument('-b', '--batch_size', default=32, type=int,
+                    help='Batch size used to test')
 
 args = parser.parse_args()
 
@@ -19,18 +32,18 @@ if __name__ == '__main__':
 
     # Model settings
     num_workers = args.num_workers
-    model_folder = "models"
-    state_dict_file = "pretrain/pretrain-yelp-64-0.00002_10000.tar"
+    model_folder = args.model_folder
+    state_dict_file = args.state_dict_file
 
     # Test parameter
-    dataset_name = "imdb"
-    num_classes = 2
-    sent_length = 510
-    batch_size = 32
+    dataset_name = args.dataset_name
+    num_classes = args.num_class
+    sent_length = args.sent_length
+    batch_size = args.batch_size
 
     test_dataset = ClassificationDataset(dataset_name, 'test', sent_length)
     test_loader = DataLoader(test_dataset, batch_size=batch_size,
-                             shuffle=False, drop_last=False, num_workers=2, pin_memory=True)
+                             shuffle=False, drop_last=False, num_workers=num_workers, pin_memory=True)
 
     model = BERTForClassification(num_classes)
     file_path = f"{model_folder}/{state_dict_file}"
