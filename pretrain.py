@@ -10,7 +10,7 @@ from ClassificationDataset import ClassificationDataset
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Further pretrain BERT model')
+parser = argparse.ArgumentParser(description='Further pre-train BERT model')
 
 parser.add_argument('--num_worker', default=1, type=int,
                     help='Number of workers for dataloader')
@@ -20,20 +20,20 @@ parser.add_argument('-f', '--model_folder', default="models", type=str,
 parser.add_argument('-n', '--model_name', default="pretrain", type=str,
                     help='Prefix of model name')
 parser.add_argument('-s', '--num_steps', default=10000, type=int,
-                    help='Number of further pretrain steps')
+                    help='Number of further pre-train steps')
 
 parser.add_argument('-d', '--dataset_name', default="yelp", type=str,
-                    help='Dataset used to pretrain')
+                    help='Dataset used to pre-train')
 parser.add_argument('-c', '--num_class', default=2, type=int,
                     help='Number of classes in the dataset')
 parser.add_argument('-l', '--sent_length', default=510, type=int,
-                    help='Sent length used to pretrain')
+                    help='Sent length used to pre-train')
 parser.add_argument('-b', '--batch_size', default=64, type=int,
-                    help='Batch size used to pretrain')
+                    help='Batch size used to pre-train')
 parser.add_argument('-r', '--learning_rate', default=2e-5, type=float,
-                    help='Learning rate used to pretrain')
+                    help='Learning rate used to pre-train')
 parser.add_argument('-w', '--warmup_proportion', default=0.1, type=float,
-                    help='Warmup Proportion used to pretrain')
+                    help='Warmup Proportion used to pre-train')
 
 args = parser.parse_args()
 

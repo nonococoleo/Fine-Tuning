@@ -12,8 +12,8 @@ parser.add_argument('--num_workers', default=1, type=int,
                     help='Number of workers for dataloader')
 parser.add_argument('-f', '--model_folder', default="models", type=str,
                     help='Folder to save models')
-parser.add_argument('-t', '--state_dict_file', default="pretrain/pretrain-yelp-64-0.00002_10000.tar", type=str,
-                    help='Pretrained model state used to test')
+parser.add_argument('-t', '--state_dict_file', default=None, type=str,
+                    help='Pre-trained model state used to test')
 
 parser.add_argument('-d', '--dataset_name', default="imdb", type=str,
                     help='Dataset used to test')
