@@ -10,7 +10,7 @@ from ClassificationDataset import ClassificationDataset
 
 import argparse
 
-parser = argparse.ArgumentParser(description='fine-tune pretrained BERT model')
+parser = argparse.ArgumentParser(description='fine-tune pre-trained BERT model')
 
 parser.add_argument('--num_worker', default=1, type=int,
                     help='Number of workers for dataloader')
@@ -24,20 +24,20 @@ parser.add_argument('-p', '--pretrain_state_dict_file', default=None, type=str,
 parser.add_argument('-s', '--start_epoch', default=1, type=int,
                     help='Start epoch')
 parser.add_argument('-e', '--num_epoch', default=5, type=int,
-                    help='Number of epoch used to finetune')
+                    help='Number of epoch used to fine-tune')
 
 parser.add_argument('-d', '--dataset_name', default="yelp", type=str,
                     help='Dataset used to fine-tune')
 parser.add_argument('-c', '--num_class', default=2, type=int,
                     help='Number of classes in the dataset')
 parser.add_argument('-l', '--sent_length', default=510, type=int,
-                    help='Sent length used to finetune')
+                    help='Sent length used to fine-tune')
 parser.add_argument('-b', '--batch_size', default=32, type=int,
-                    help='Batch size used to finetune')
+                    help='Batch size used to fine-tune')
 parser.add_argument('-r', '--learning_rate', default=2e-3, type=float,
-                    help='Learning rate used to finetune')
+                    help='Learning rate used to fine-tune')
 parser.add_argument('-w', '--warmup_proportion', default=0.1, type=float,
-                    help='Warmup Proportion used to finetune')
+                    help='Warmup Proportion used to fine-tune')
 
 args = parser.parse_args()
 
