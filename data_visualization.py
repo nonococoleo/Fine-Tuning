@@ -22,15 +22,17 @@ def plot_bs():
         if file.endswith('.out'):
             f = open(path+file, 'r')
             data = [float(line.rstrip()) for line in f]
+            f.close()
+
             avg_data = split_by_n(data, 50)
             n = len(avg_data)
             y = avg_data
-            x = [50 * n for n in range(1, n+1)]
+            x = [i / n * 100 for i in range(1, n + 1)]
             plt.plot(x, y, label=file[-6:-4])
-            f.close()
-    plt.title('AG_NEWS Batch Size') 
-    plt.ylabel('Loss') 
-    plt.xlabel('Steps') 
+
+    plt.title('Training Loss vs Step by different Batch Size')
+    plt.ylabel('Loss')
+    plt.xlabel('Step (%)')
     plt.legend()
     plt.ylim(0.25,0.5)
     plt.show()
@@ -43,17 +45,19 @@ def plot_lr():
         if file.endswith('.out'):
             f = open(path+file, 'r')
             data = [float(line.rstrip()) for line in f]
+            f.close()
+
             avg_data = split_by_n(data, 50)
             n = len(avg_data)
             y = avg_data
-            x = [50 * n for n in range(1, n+1)]
+            x = [i / n * 100 for i in range(1, n + 1)]
             label = file[-7:-4]
             label = label[:2]+'-'+label[2:]
             plt.plot(x, y, label=label)
-            f.close()
-    plt.title('AG_NEWS Learning Rate') 
-    plt.ylabel('Loss') 
-    plt.xlabel('Steps') 
+
+    plt.title('Training Loss vs Step by different Learning Rate')
+    plt.ylabel('Loss')
+    plt.xlabel('Step (%)')
     plt.legend()
     plt.ylim(0.2,1)
     plt.show()
