@@ -54,7 +54,7 @@ example:
 
 ### App
 `python3 app.py`  
-*model needed in this part can be downloaded from: https://drive.google.com/file/d/123w7-nKRKrcWkshalH39qMkbfOsRe-Q9/view?usp=sharing
+*model needed in this part can be downloaded from [Google Drive](https://drive.google.com/file/d/123w7-nKRKrcWkshalH39qMkbfOsRe-Q9/view?usp=sharing)
 
 
 ## Usage
