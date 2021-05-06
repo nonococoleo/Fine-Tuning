@@ -3,7 +3,22 @@ from transformers import AutoTokenizer
 from utilities import *
 from BERT import BERTForClassification
 
-model_file = "models/all_10000-yelp-32-0.002-0.1_checkpoint_5.tar"
+import argparse
+
+parser = argparse.ArgumentParser(description='RESTful Sentiment Analysis API')
+
+parser.add_argument('-m', '--model_path', default="models/all_32-0.002-0.1_checkpoint_5.tar", type=str,
+                    help='Path to Sentiment Analysis model')
+
+parser.add_argument('-d', '--host', default='0.0.0.0', type=str,
+                    help='Host of server')
+
+parser.add_argument('-p', '--port', default=5000, type=int,
+                    help='Port of server')
+
+args = parser.parse_args()
+
+model_file = args.model_path
 
 
 def load_model(device, model_file, num_classes=2):
@@ -85,4 +100,4 @@ api.add_resource(Predict, '/predict')
 
 if __name__ == '__main__':
     app.logger.setLevel(logging.INFO)
-    app.run('0.0.0.0')
+    app.run(args.host, args.port)
