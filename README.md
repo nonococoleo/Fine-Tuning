@@ -1,4 +1,4 @@
-# Analysis of Fine-Tuning Techniques for Text Classification Tasks
+# Analysis of Fine-Tuning Techniques for Text Classification
 
 ## File Structure
 
