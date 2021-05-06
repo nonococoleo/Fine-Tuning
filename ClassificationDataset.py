@@ -39,8 +39,8 @@ class ClassificationDataset(Dataset):
 
     def __getitem__(self, index):
         label = self.labels[index]
-        tokens_id = self.tokens_ids[index]
+        sentenece = self.tokens_ids[index]
 
-        tokens_id_tensor, attention_mask = process_inputs(tokens_id, self.max_sentence_length, self.max_sequence_length)
+        tokens_id, attention_mask = process_inputs(sentenece, self.max_sentence_length, self.max_sequence_length)
 
-        return tokens_id_tensor, attention_mask, label
+        return torch.Tensor(tokens_id).long(), torch.Tensor(attention_mask).int(), label
