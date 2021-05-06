@@ -15,7 +15,7 @@ def split_by_n(ls, n):
 
 
 def plot_bs():
-    path = os.getcwd()+'/agnews/bs/'
+    path = 'logs/agnews/bs/'
     file_list = os.listdir(path)
     for file in file_list:
         if file.endswith('.out'):
@@ -38,7 +38,7 @@ def plot_bs():
 
 
 def plot_lr():
-    path = os.getcwd()+'/agnews/lr/'
+    path = 'logs/agnews/lr/'
     file_list = os.listdir(path)
     for file in file_list:
         if file.endswith('.out'):
@@ -63,5 +63,5 @@ def plot_lr():
 
 
 if __name__ == '__main__':
-    plot_bs()
+    # plot_bs()
     plot_lr()
