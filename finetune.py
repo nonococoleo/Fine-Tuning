@@ -17,7 +17,7 @@ parser.add_argument('--num_worker', default=1, type=int,
 
 parser.add_argument('-f', '--model_folder', default="models", type=str,
                     help='Folder to save models')
-parser.add_argument('-n', '--model_name', default="pretrain", type=str,
+parser.add_argument('-n', '--model_name', default="finetune", type=str,
                     help='Prefix of model name')
 parser.add_argument('-p', '--pretrain_state_dict_file', default=None, type=str,
                     help='Pre-trained model state dict')
