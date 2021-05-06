@@ -33,17 +33,6 @@ MANIFEST
 *.manifest
 *.spec
 
-
-.DS_Store
-
-# IDE
-.idea/
-.vscode/
-
-# Data
-.data/
-dataset/*
-
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -141,3 +130,13 @@ dmypy.json
 
 # MacOS file
 .DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Data
+.data/
+datasets/
+logs/
+models/
