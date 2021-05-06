@@ -5,18 +5,58 @@
     .
     ├── BERT.py                         # BERT class
     ├── ClassificationDataset.py        # dataset class
-    ├── README.md                       # README file
     ├── app.py                          # RESTful API server
     ├── data.py                         # fetch and preprocess datasets
-    ├── data_visualization.py           # visualize model ouputs, plot loss curves
+    ├── plot.py                         # plot loss curves
     ├── finetune.py                     # finetune model
-    ├── index.html                      # page for API
+    ├── index.html                      # demo web application
     ├── pretrain.py                     # further pretrain model
-    ├── requirements.txt                # specify what python packages are required to run the project 
+    ├── requirements.txt                # python environment packages
     ├── test.py                         # test model
-    └── utilities.py                    # utility functions
+    ├── utilities.py                    # utility functions
+    ├── datasets                        # folder to save preprocessed dataset
+    ├── logs                            # folder to save logs
+    └── models                          # folder to save models
 
 ## How To Run
+
+## Usage
+
+The API "/predict" requires POST method, and takes json containing key "sentences" of a list of string as input,
+returning json containing "sentences" and corresponding predicted "labels".
+
+sample input
+
+```json
+{
+  "sentences": [
+    "I have the older version of this and it works great. I love being able to see my food while it’s cooking and have cooked chicken, fries, baked potatoes, biscuits and many other things. Also you can cook more at one time than in other air fryers. Love how it is so easy to clean.",
+    "It’s big but you can’t cook much because the metal grate that fits inside the glass bowl is small. French fries don’t get very crispy and they fall though the metal grates. Also because it’s a glass bowl, the red light used to cook it is really bright."
+  ]
+}
+```
+
+sample output
+
+```json
+{
+  "success": true,
+  "message": {
+    "sentences": [
+      "I have the older version of this and it works great. I love being able to see my food while it’s cooking and have cooked chicken, fries, baked potatoes, biscuits and many other things. Also you can cook more at one time than in other air fryers. Love how it is so easy to clean.",
+      "It’s big but you can’t cook much because the metal grate that fits inside the glass bowl is small. French fries don’t get very crispy and they fall though the metal grates. Also because it’s a glass bowl, the red light used to cook it is really bright."
+    ],
+    "labels": [
+      true,
+      false
+    ]
+  }
+}
+```
+
+## Demo web application
+
+![](demo.gif)
 
 ## Performance Evaluation
 
@@ -31,6 +71,7 @@
 | All except IMDB | - | - | 0.937 |
 | All| **0.975394737** | 0.625107692 | **0.94276** |
 
-The table above shows the best test accuracy reached with different further pre-train datasets. The first row is the
-test dataset, and the first columns is the pre-train datasets. We discovered that different datasets in the same task
-help create a more generalized model that has decent performance on more than one dataset.
+The table above shows the best test accuracy reached with different further pre-train datasets. The first row indicates
+the fine-tuning dataset, and the first columns indicates the further pre-training datasets. We discovered that further
+pre-training with different datasets within the same task help create a more generalized model that has decent
+performance on more than one dataset.
