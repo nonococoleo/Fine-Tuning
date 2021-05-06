@@ -21,7 +21,10 @@
 ## How To Run
 
 ### Install requirements
-`pip3 install -r requirements.txt`
+
+```bash
+pip3 install -r requirements.txt
+```
 
 ### Datasets
 
@@ -36,26 +39,58 @@
 
 #### Fetch and encode datasets
 
-`python3 data.py -d <dataset_name> -s <split>`  
-example:  
-`python3 data.py -d imdb -s train`
+```bash
+python3 data.py -d <dataset_name> -s <split>
+```  
+
+example:
+
+```bash
+python3 data.py -d imdb -s train
+```
 
 ### Pretrain
-`python3 pretrain.py -d <dataset_name> -c <num_class> -b <batch_size> -r <learning_rate>`  
-example:  
-`python3 pretrain.py -d imdb -c 2 -b 32 -r 2e-3`  
+
+```bash
+python3 pretrain.py -d <dataset_name> -c <num_class> -b <batch_size> -r <learning_rate>
+```
+
+example:
+
+```bash
+python3 pretrain.py -d imdb -c 2 -b 32 -r 2e-3
+```
+
 *for more arguments and explanation please check `pretrain.py`
 
 ### Finetune
-`python3 finetune.py -d <dataset_name> -c <num_class> -b <batch_size> -r <learning_rate>`  
-example:  
-`python3 finetune.py -d imdb -c 2 -b 32 -r 2e-3`  
+
+```bash
+python3 finetune.py -d <dataset_name> -c <num_class> -b <batch_size> -r <learning_rate>
+```
+
+example:
+
+```bash
+python3 finetune.py -d imdb -c 2 -b 32 -r 2e-3
+```
+
 *for more arguments and explanation please check `finetune.py`
 
 ### App
-`python3 app.py`  
-*model needed in this part can be downloaded from: https://drive.google.com/file/d/123w7-nKRKrcWkshalH39qMkbfOsRe-Q9/view?usp=sharing
 
+```bash
+python3 app.py -m <model_path> -d <listen_address> -p <listen_port>
+``` 
+
+example:
+
+```bash
+python3 app.py
+```
+
+*model needed in this part can be downloaded
+from: https://drive.google.com/file/d/123w7-nKRKrcWkshalH39qMkbfOsRe-Q9/view?usp=sharing
 
 ## Usage
 

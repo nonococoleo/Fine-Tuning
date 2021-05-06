@@ -63,5 +63,5 @@ def plot_lr():
 
 
 if __name__ == '__main__':
-    # plot_bs()
+    plot_bs()
     plot_lr()
