@@ -61,7 +61,7 @@ example:
 python3 pretrain.py -d imdb -c 2 -b 32 -r 2e-3
 ```
 
-*for more arguments and explanation please check `pretrain.py`
+* for more arguments and explanation please check `pretrain.py`.
 
 ### Finetune
 
@@ -75,7 +75,7 @@ example:
 python3 finetune.py -d imdb -c 2 -b 32 -r 2e-3
 ```
 
-*for more arguments and explanation please check `finetune.py`
+* for more arguments and explanation please check `finetune.py`.
 
 ### App
 
@@ -89,8 +89,8 @@ example:
 python3 app.py
 ```
 
-*model needed in this part can be downloaded
-from: https://drive.google.com/file/d/123w7-nKRKrcWkshalH39qMkbfOsRe-Q9/view?usp=sharing
+* model needed in this part can be downloaded
+  from [Google Drive](https://drive.google.com/file/d/123w7-nKRKrcWkshalH39qMkbfOsRe-Q9/view?usp=sharing).
 
 ## Usage
 
