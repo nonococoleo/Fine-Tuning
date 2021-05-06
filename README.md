@@ -20,6 +20,43 @@
 
 ## How To Run
 
+### Install requirements
+`pip3 install -r requirements.txt`
+
+### Datasets
+
+| Type | Name | Number of Classes | Number of Train Cases | Number of Test Cases |
+| --- | --- | --- | --- | --- |
+| Topic | AG_NEWS | 4 | 120000 | 7600 |
+| Topic | DBpedia | 14 | 560000 | 70000 |
+| Question | YahooAnswers | 10 | 1400000 | 60000 |
+| Sentiment | YelpReviewPolarity | 2 | 560000 | 38000 |
+| Sentiment | AmazonReviewFull | 5 | 300000 | 65000 |
+| Sentiment | IMDB | 2 | 25000 | 25000 |
+
+#### Fetch and encode datasets
+
+`python3 data.py -d <dataset_name> -s <split>`  
+example:  
+`python3 data.py -d imdb -s train`
+
+### Pretrain
+`python3 pretrain.py -d <dataset_name> -c <num_class> -b <batch_size> -r <learning_rate>`  
+example:  
+`python3 pretrain.py -d imdb -c 2 -b 32 -r 2e-3`  
+*for more arguments and explanation please check `pretrain.py`
+
+### Finetune
+`python3 finetune.py -d <dataset_name> -c <num_class> -b <batch_size> -r <learning_rate>`  
+example:  
+`python3 finetune.py -d imdb -c 2 -b 32 -r 2e-3`  
+*for more arguments and explanation please check `finetune.py`
+
+### App
+`python3 app.py`  
+*model needed in this part can be downloaded from: https://drive.google.com/file/d/123w7-nKRKrcWkshalH39qMkbfOsRe-Q9/view?usp=sharing
+
+
 ## Usage
 
 The API "/predict" requires POST method, and takes json containing key "sentences" of a list of string as input,
